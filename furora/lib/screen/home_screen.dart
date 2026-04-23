@@ -9,14 +9,24 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final images = ImageStore.images;
 
-    if (ImageStore.images.isEmpty) {
-      return const Center(
-        child: Text("No photos yet"),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(12),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Text(
+            'Gallery',
+            style: TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+       Expanded(
+          child: ImageStore.images.isEmpty
+            ? const Center(child: Text("No photos yet"))
+          : Padding(
+            padding: const EdgeInsets.all(12),
       child: GridView.builder(
         itemCount: ImageStore.images.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -68,6 +78,9 @@ class HomePage extends StatelessWidget {
           );
         },
       ),
+    )
+    ),
+    ],
     );
   }
 }
