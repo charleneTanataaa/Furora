@@ -1,9 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:furora/components/image_store.dart';
-import 'package:furora/screen/home_screen.dart';
 import 'dart:typed_data';
-import 'image_view_page.dart';
 
 class CameraScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -72,7 +70,7 @@ class _CameraScreenState extends State<CameraScreen> {
       final Uint8List bytes = await picture.readAsBytes();
       final detectedExpression = _fakeDetectionExpression();
 
-      ImageStore.images.add(
+      ImageStore.addImage(
         CapturedImage(
           bytes: bytes,
           expression: detectedExpression,
