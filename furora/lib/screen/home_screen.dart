@@ -9,78 +9,80 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final images = ImageStore.images;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
-          child: Text(
-            'Gallery',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 8),
+            child: Text(
+              'Gallery',
+              style: TextStyle(
+                fontSize: 32,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-       Expanded(
-          child: ImageStore.images.isEmpty
-            ? const Center(child: Text("No photos yet"))
-          : Padding(
-            padding: const EdgeInsets.all(12),
-      child: GridView.builder(
-        itemCount: ImageStore.images.length,
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 20,
-          mainAxisSpacing: 20,
-        ),
-        itemBuilder: (context, index) {
-          final item = images[index];
-
-          return GestureDetector(
-            onTap: (){
-              Navigator.push(
-                context, 
-                MaterialPageRoute(
-                  builder: (_) => ImageViewPage(image: item)
-                ),
-              );
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Image.memory(
-                      item.bytes,
-                      fit: BoxFit.cover,
-                    ),
+         Expanded(
+            child: ImageStore.images.isEmpty
+              ? const Center(child: Text("No photos yet"))
+            : Padding(
+              padding: const EdgeInsets.all(12),
+        child: GridView.builder(
+          itemCount: ImageStore.images.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+          ),
+          itemBuilder: (context, index) {
+            final item = images[index];
+      
+            return GestureDetector(
+              onTap: (){
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (_) => ImageViewPage(image: item)
                   ),
-            
-                  Positioned(
-                    bottom: 1,
-                    right: 5,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                        color: Colors.black54,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        item.expression,
-                        style: const TextStyle(fontSize: 18),
+                );
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Image.memory(
+                        item.bytes,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                ],
-              )
-            ),
-          );
-        },
+              
+                    Positioned(
+                      bottom: 1,
+                      right: 5,
+                      child: Container(
+                        padding: const EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Text(
+                          item.expression,
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            );
+          },
+        ),
+      )
       ),
-    )
-    ),
-    ],
+      ],
+      ),
     );
   }
 }

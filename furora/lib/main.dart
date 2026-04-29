@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:furora/components/main_navigation.dart';
 import 'package:furora/components/image_store.dart';
+import 'package:furora/screen/auth_screen.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -38,7 +39,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       ),
-      home: MainNavigation(cameras: cameras),
+      home: const AuthScreen(),
     );
   }
 }

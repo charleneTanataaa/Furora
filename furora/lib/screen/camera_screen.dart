@@ -96,16 +96,29 @@ class _CameraScreenState extends State<CameraScreen> {
       );
     }
 
-    if (!controller!.value.isInitialized) return const SizedBox.shrink();
+    if (!controller!.value.isInitialized) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
     final screenSize = MediaQuery.of(context).size;
-    final squareSize = screenSize.width * 0.8; // 80% of screen width
+    final squareSize = screenSize.width * 0.8; 
 
     return Scaffold(
       body: Stack(
         children: [
           SizedBox.expand(
-            child: CameraPreview(controller!),
+            child: FittedBox(
+              fit: BoxFit.cover,
+              child: SizedBox(
+                width: controller!.value.previewSize!.height,
+                height: controller!.value.previewSize!.width,
+                child: CameraPreview(controller!)
+              ),
+            )
           ),
  
           Positioned(

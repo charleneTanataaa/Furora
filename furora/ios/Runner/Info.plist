@@ -46,6 +46,10 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>open cam</string>
+	<string>Open cam</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs photo library access to save images.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app needs microphone access for video recording.</string>
 </dict>
 </plist>
