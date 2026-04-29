@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
+import 'package:flutter/rendering.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CapturedImage {
@@ -18,43 +21,67 @@ class CapturedImage {
 
 class ImageStore {
   static List<CapturedImage> images = [];
+  
+  static Future<Directory> _getImageDir() async{
+    final appDir = await getApplicationDocumentsDirectory();
+    final imageDir = Directory('${appDir.path}/furora_images');
 
-  static Future<void> loadFromDisk() async {
-    final prefs = await SharedPreferences.getInstance();
-    final keys = prefs.getStringList('image_keys') ?? [];
+    if(!await imageDir.exists()){
+      await imageDir.create(recursive: true);
+    }
+    return imageDir;
+  }
 
-    images = [];
-    for (final key in keys) {
-      final b64 = prefs.getString('${key}_bytes');
-      if (b64 == null) continue;
+  static Future<void> addImage(CapturedImage image) async{
+    images.add(image);
+    await _saveToDisk(image);
+  }
 
-      final bytes = base64Decode(b64);
-      final expression = prefs.getString('${key}_expression') ?? '';
-      final location = prefs.getString('${key}_location') ?? '';
-      final dateMs = prefs.getInt('${key}_date') ?? 0;
+  static Future<void> _saveToDisk(CapturedImage image) async{
+    try{
+      final dir = await _getImageDir();
+      final timestamp = image.date.microsecondsSinceEpoch;
 
-      images.add(CapturedImage(
-        bytes: bytes,
-        date: DateTime.fromMillisecondsSinceEpoch(dateMs),
-        expression: expression,
-        location: location,
-      ));
+      final imageFile = File('${dir.path}/$timestamp.jpg');
+      await imageFile.writeAsBytes(image.bytes);
+
+      final metaFile = File('${dir.path}/$timestamp.meta');
+      await metaFile.writeAsString(
+        '${image.expression}|${image.date.toIso8601String()}|${image.location}'
+      );
+    } catch (e) {
+      debugPrint('Error saving image: $e');
     }
   }
 
-  static Future<void> addImage(CapturedImage image) async {
-    images.add(image);
+  static Future<void> loadFromDisk() async {
+    try{
+      final dir = await _getImageDir();
+      debugPrint('Images stored at: ${dir.path}');
+      final files = dir.listSync().whereType<File>().toList();
+      final jpgFiles = files.where((f) => f.path.endsWith('.jpg')).toList();
 
-    final prefs = await SharedPreferences.getInstance();
-    final key = 'img_${DateTime.now().millisecondsSinceEpoch}';
+      for(final file in jpgFiles){
+        final timestamp = file.path.split('/').last.replaceAll('.jpg', '');
+        final metaFile = File('${dir.path}/$timestamp.meta');
 
-    await prefs.setString('${key}_bytes', base64Encode(image.bytes));
-    await prefs.setString('${key}_expression', image.expression);
-    await prefs.setString('${key}_location', image.location);
-    await prefs.setInt('${key}_date', image.date.millisecondsSinceEpoch);
+        if(!await metaFile.exists()) continue;
 
-    final keys = prefs.getStringList('image_keys') ?? [];
-    keys.add(key);
-    await prefs.setStringList('image_keys', keys);
+        final meta = await metaFile.readAsString();
+        final parts = meta.split('|');
+        if(parts.length < 3) continue;
+
+        final bytes = await file.readAsBytes();
+        images.add(CapturedImage(
+          bytes: bytes, 
+          date: DateTime.parse(parts[1]), 
+          expression: parts[0], 
+          location: parts[2],
+          ),
+        );
+      } 
+    } catch (e) {
+      debugPrint('Error loading images: $e');
+    }
   }
 }

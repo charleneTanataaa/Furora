@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:furora/screen/camera_screen.dart';
 import 'package:furora/screen/home_screen.dart';
+import 'package:furora/screen/profile_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -29,7 +30,7 @@ class _MainNavigationState extends State<MainNavigation> {
     final _pages = [
       HomePage(),
       const Center(child: Text("Camera")),
-      const Center(child: Text("Profile Page")),
+      const ProfilePage(),
     ];
 
     return Scaffold(
