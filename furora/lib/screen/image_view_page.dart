@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:furora/components/image_store.dart';
 class ImageViewPage extends StatelessWidget {
   final CapturedImage image;
-  const ImageViewPage({super.key, required this.image});
+  final VoidCallback? onDelete;
+  const ImageViewPage({
+    super.key, 
+    required this.image,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,19 +66,28 @@ class ImageViewPage extends StatelessWidget {
           // Date text at top
           Padding(
             padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                formattedDate,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:[
+                Text(
+                  formattedDate,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
+                IconButton(
+                  onPressed: () => _confirmDelete(context),
+                  icon: const Icon(Icons.close, color: Colors.black87),
+                  style: IconButton.styleFrom(
+                    minimumSize: const Size(32,32),
+                    padding:EdgeInsets.zero,
+                  ),
+                ),
+              ],
             ),
           ),
-
           Expanded(
             flex: 3,
             child: Padding(
@@ -131,4 +145,29 @@ class ImageViewPage extends StatelessWidget {
       ),
     );
   }
+
+void _confirmDelete(BuildContext context){
+  showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      title: const Text('Delete photo?'),
+      content: const Text('This photo will be permanently deleted.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(ctx), 
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: (){
+            Navigator.pop(ctx);
+            Navigator.pop(context);
+            onDelete?.call();
+          },
+          style:TextButton.styleFrom(foregroundColor: Colors.red),
+          child: const Text('Delete'),
+        ),
+    ],
+  ),
+  );
+}
 }

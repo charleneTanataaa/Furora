@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:furora/components/image_store.dart';
 import 'package:furora/screen/image_view_page.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>{
   @override
   Widget build(BuildContext context) {
     final images = ImageStore.images;
@@ -43,7 +48,14 @@ class HomePage extends StatelessWidget {
                 Navigator.push(
                   context, 
                   MaterialPageRoute(
-                    builder: (_) => ImageViewPage(image: item)
+                    builder: (_) => ImageViewPage(
+                      image: item,
+                      onDelete:(){
+                        setState((){
+                          images.remove(item);
+                        });
+                      },
+                    ),
                   ),
                 );
               },
