@@ -1,6 +1,5 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:furora/components/main_navigation.dart';
 import 'package:furora/components/image_store.dart';
 import 'package:furora/screen/auth_screen.dart';
 

@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:furora/components/image_store.dart';
+import 'package:image/image.dart' as img;
 import 'dart:typed_data';
 
 class CameraScreen extends StatefulWidget {
@@ -38,7 +39,7 @@ class _CameraScreenState extends State<CameraScreen> {
       debugPrint("No cameras available");
       return;
     }
-    controller = CameraController(widget.cameras[0], ResolutionPreset.max);
+    controller = CameraController(widget.cameras[0], ResolutionPreset.medium);
     controller!.initialize().then((_) {
       if (!mounted) return;
       setState(() {});
@@ -56,7 +57,7 @@ class _CameraScreenState extends State<CameraScreen> {
   }
 
   void _takePicture() async {
-    String _fakeDetectionExpression() {
+    String fakeDetectionExpression() {
       final expressions = [':)', 'zz', '><', 'T_T'];
       expressions.shuffle();
       return expressions.first;
@@ -68,7 +69,17 @@ class _CameraScreenState extends State<CameraScreen> {
     try {
       final XFile picture = await controller!.takePicture();
       final Uint8List bytes = await picture.readAsBytes();
-      final detectedExpression = _fakeDetectionExpression();
+      final detectedExpression = fakeDetectionExpression();
+
+      final decoded = img.decodeImage(bytes);
+      if (decoded != null) {
+        final size = decoded.width < decoded.height ? decoded.width : decoded.height;
+        final x = (decoded.width - size) ~/ 2;
+        final y = (decoded.height - size) ~/ 2;
+        final cropped = img.copyCrop(decoded, x: x, y: y, width: size, height: size);
+        final croppedBytes = Uint8List.fromList(img.encodeJpg(cropped));
+
+        final detectedExpression = fakeDetectionExpression();
 
       ImageStore.addImage(
         CapturedImage(
@@ -81,7 +92,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
       await Future.delayed(const Duration(milliseconds: 100));
       Navigator.pop(context);
-    } catch (e) {
+    }} catch (e) {
       debugPrint('ERR take picture: $e');
     } finally {
       _isTakingPicture = false;
@@ -108,18 +119,25 @@ class _CameraScreenState extends State<CameraScreen> {
     final squareSize = screenSize.width * 0.8; 
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Stack(
         children: [
-          SizedBox.expand(
-            child: FittedBox(
-              fit: BoxFit.cover,
-              child: SizedBox(
-                width: controller!.value.previewSize!.height,
-                height: controller!.value.previewSize!.width,
-                child: CameraPreview(controller!)
+          Center(
+          child: ClipRect(
+            child: SizedBox(
+              width: squareSize,
+              height: squareSize,
+              child: FittedBox(
+                fit: BoxFit.cover,
+                child: SizedBox(
+                  width: controller!.value.previewSize!.height,
+                  height: controller!.value.previewSize!.width,
+                  child: CameraPreview(controller!),
+                ),
               ),
-            )
+            ),
           ),
+        ),
  
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,

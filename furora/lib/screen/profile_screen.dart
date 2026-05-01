@@ -17,7 +17,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsetsGeometry.symmetric(horizontal: 24),
+        padding: const EdgeInsetsGeometry.symmetric(horizontal: 2),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -31,31 +31,34 @@ class ProfilePage extends StatelessWidget {
               ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 10),
 
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 36,
-                  backgroundColor: Colors.blueGrey[100],
-                  child: const Icon(Icons.person, size: 36, color: Colors.blueGrey),
-                ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Guest User',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'guest@furora.app',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
-                )
-              ],
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 36,
+                    backgroundColor: Colors.blueGrey[100],
+                    child: const Icon(Icons.person, size: 36, color: Colors.blueGrey),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Guest User',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'guest@furora.app',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
 
             const SizedBox(height: 40),

@@ -27,7 +27,7 @@ class _MainNavigationState extends State<MainNavigation> {
 
   @override
   Widget build(BuildContext context) {
-    final _pages = [
+    final pages = [
       HomePage(),
       const Center(child: Text("Camera")),
       const ProfilePage(),
@@ -36,7 +36,7 @@ class _MainNavigationState extends State<MainNavigation> {
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _pages,
+        children: pages,
       ),
 
       bottomNavigationBar: BottomNavigationBar(

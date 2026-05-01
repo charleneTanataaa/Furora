@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:furora/components/image_store.dart';
+
 class ImageViewPage extends StatelessWidget {
   final CapturedImage image;
   final VoidCallback? onDelete;
@@ -25,7 +26,7 @@ class ImageViewPage extends StatelessWidget {
             child: SizedBox(
               height: MediaQuery.of(context).size.height*0.75,
               child: AspectRatio(
-                aspectRatio: 3 / 4,
+                aspectRatio: 1 / 1,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: _buildMemoryCard(context),
@@ -96,6 +97,8 @@ class ImageViewPage extends StatelessWidget {
                 child: Image.memory(
                   image.bytes,
                   fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: double.infinity,
                 ),
               ),
             ),
