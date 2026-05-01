@@ -69,22 +69,6 @@ class _HomePageState extends State<HomePage>{
                         fit: BoxFit.cover,
                       ),
                     ),
-              
-                    Positioned(
-                      bottom: 1,
-                      right: 5,
-                      child: Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Text(
-                          item.expression,
-                          style: const TextStyle(fontSize: 18),
-                        ),
-                      ),
-                    ),
                   ],
                 )
               ),

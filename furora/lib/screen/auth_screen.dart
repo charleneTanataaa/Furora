@@ -64,6 +64,13 @@ class _AuthScreenState extends State<AuthScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 40,),
+
+                Center(child: Image.asset(
+                  'assets/images/logo.png',
+                  height:200,
+                ),),
+                const SizedBox(height:15),
+
                 Text(
                   _isLogin ? 'Welcome back' : 'Create account',
                   style: const TextStyle(
@@ -147,9 +154,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 20),
-
+                  const SizedBox(height:24),
                 Center(
                   child: GestureDetector(
                     onTap: () => setState(() {
